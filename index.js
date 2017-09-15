@@ -1,19 +1,25 @@
 var spawn = require("child_process").spawn;
 var fs = require("fs");
 
-var sgf = function(filter, callback) {
+var cgf = function (source, filter, callback) {
+
+    if (typeof source == "function") {
+        callback = source;
+        filter = "ACDMRTUXB";
+        source = "master";
+    }
 
     if (typeof filter == "function") {
         callback = filter;
         filter = "ACDMRTUXB";
     }
 
-    sgf.getHead(function(err, head) {
+    cgf.getSourceId(source, function (err, head) {
         if (err) {
             callback(err);
         } else {
-            var command = "git diff-index --cached --name-status --diff-filter=" + filter + " " + head;
-            run(command, function(err, stdout, stderr) {
+            var command = "git diff --name-status --diff-filter=" + filter + " " + head;
+            run(command, function (err, stdout, stderr) {
                 if (err || stderr) {
                     callback(err || new Error(stderr));
                 } else {
@@ -24,17 +30,13 @@ var sgf = function(filter, callback) {
     });
 }
 
-sgf.cwd = process.cwd();
-sgf.debug = false;
-sgf.includeContent = false;
+cgf.cwd = process.cwd();
+cgf.debug = false;
+cgf.includeContent = false;
 
-sgf.firstHead = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
-
-sgf.getHead = function(callback) {
-    run("git rev-parse --verify HEAD", function(err, stdout, stderr) {
-        if (err && err.message.indexOf("fatal: Needed a single revision")!==-1) {
-            callback(null, sgf.firstHead);
-        } else if (err || stderr) {
+cgf.getSourceId = function (source, callback) {
+    run(`git merge-base ${source} HEAD`, function (err, stdout, stderr) {
+        if (err || stderr) {
             callback(err || new Error("STDERR: " + stderr));
         } else {
             stdout = stdout.replace("\n", "");
@@ -43,23 +45,22 @@ sgf.getHead = function(callback) {
     });
 }
 
-sgf.readFile = function(filename, options, callback) {
-    fs.readFile(sgf.cwd + "/" + filename, options, callback);
+cgf.readFile = function (filename, options, callback) {
+    fs.readFile(cgf.cwd + "/" + filename, options, callback);
 }
 
-
-module.exports = sgf;
+module.exports = cgf;
 
 /** ======================================== HELPERS ======================================== **/
 
-var run = function(command, callback) {
-    if (sgf.debug) {
+var run = function (command, callback) {
+    if (cgf.debug) {
         console.log("RUNNING: " + command);
     }
-    
+
     // var exec = require("child_process").exec;
     // exec("cd '" + module.exports.cwd + "' && " + command, callback);
-    
+
     var bits = command.split(" ");
     var args = bits.slice(1);
 
@@ -70,26 +71,26 @@ var run = function(command, callback) {
     var stdout = "";
     var stderr = "";
 
-    cmd.stdout.on('data', function(data){
-        stdout+=data.toString();
+    cmd.stdout.on('data', function (data) {
+        stdout += data.toString();
     });
 
-    cmd.stderr.on('data', function(data){
-        stderr+=data.toString();
+    cmd.stderr.on('data', function (data) {
+        stderr += data.toString();
     });
 
-    cmd.on("close", function(code){
+    cmd.on("close", function (code) {
         var err = null;
 
-        if(code!==0){
+        if (code !== 0) {
             err = new Error(stderr);
         }
-        
-        callback(err,stdout,stderr);
+
+        callback(err, stdout, stderr);
     });
 }
 
-var codeToStatus = function(code) {
+var codeToStatus = function (code) {
     /* ===============================================================================================================================
      ** PER git diff-index --help
      ** --diff-filter=[(A|C|D|M|R|T|U|X|B)...[*]]
@@ -115,7 +116,7 @@ var codeToStatus = function(code) {
     return map[code];
 }
 
-var stdoutToResultsObject = function(stdout) {
+var stdoutToResultsObject = function (stdout) {
     var results = [];
     var lines = stdout.split("\n");
     var iLines = lines.length;
@@ -129,9 +130,9 @@ var stdoutToResultsObject = function(stdout) {
                 status: codeToStatus(parts[0])
             }
 
-            if (sgf.includeContent) {
+            if (cgf.includeContent) {
                 try {
-                    result.content = fs.readFileSync(sgf.cwd + "/" + result.filename, {
+                    result.content = fs.readFileSync(cgf.cwd + "/" + result.filename, {
                         encoding: "utf8"
                     });
                 } catch (err) {

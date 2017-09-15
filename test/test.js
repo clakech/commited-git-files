@@ -3,25 +3,25 @@ var fs = require("fs");
 exec = require("child_process").exec;
 test_folder = process.cwd() + "/test/test-dir";
 
-asyncCatch = function(done, test){
-    return function(err, value){
-        if(err){
+asyncCatch = function (done, test) {
+    return function (err, value) {
+        if (err) {
             done(err);
         }
-        else{
-            try{
+        else {
+            try {
                 test(value);
                 done();
             }
-            catch(err){
+            catch (err) {
                 done(err);
             }
         }
     }
 }
 
-cleanUp = function(callback) {
-    exec("rm -rf '" + test_folder + "'", function(err, stderr, stdout) {
+cleanUp = function (callback) {
+    exec("rm -rf '" + test_folder + "'", function (err, stderr, stdout) {
         if (err || stderr) {
             callback(err || new Error(stderr));
         } else {
@@ -30,12 +30,12 @@ cleanUp = function(callback) {
     });
 }
 
-setup = function(callback) {
-    cleanUp(function(err) {
+setup = function (callback) {
+    cleanUp(function (err) {
         if (err) {
             callback(err);
         } else {
-            exec("mkdir '" + test_folder + "'", function(err, stdout, stderr) {
+            exec("mkdir '" + test_folder + "'", function (err, stdout, stderr) {
                 if (err || stderr) {
                     callback(err || new Error(stderr));
                 } else {
@@ -46,21 +46,21 @@ setup = function(callback) {
     });
 }
 
-newSGF = function() {
-    var sgf = require("../");
-    sgf.cwd = test_folder
-    return sgf;
+newCGF = function () {
+    var cgf = require("../");
+    cgf.cwd = test_folder
+    return cgf;
 }
 
-run = function(command, callback) {
+run = function (command, callback) {
     exec("cd '" + test_folder + "' && " + command, callback);
 }
 
-newGit = function(callback) {
+newGit = function (callback) {
     run("rm -rf .git && git init", callback);
 }
 
-var randomFileName = function(lengths) {
+var randomFileName = function (lengths) {
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var filename = randomString(possible, lengths[0]);
     for (var i = 1; i < lengths.length; i++) {
@@ -69,12 +69,12 @@ var randomFileName = function(lengths) {
     return filename;
 }
 
-var randomFileContent = function(length) {
+var randomFileContent = function (length) {
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 \t\n,.;'[](){}\":?><";
     return randomString(possible, length);
 }
 
-var randomString = function(possible, length) {
+var randomString = function (possible, length) {
     var text = "";
 
     while (length--) {
@@ -84,7 +84,7 @@ var randomString = function(possible, length) {
     return text;
 }
 
-newFile = function(opts, callback) {
+newFile = function (opts, callback) {
 
     if (typeof opts == "function") {
         callback = opts;
@@ -94,7 +94,7 @@ newFile = function(opts, callback) {
     opts.filename = opts.filename || randomFileName([8, 3]);
     opts.content = opts.content || randomFileContent(10000);
 
-    fs.writeFile(test_folder + "/" + opts.filename, opts.content, function(err) {
+    fs.writeFile(test_folder + "/" + opts.filename, opts.content, function (err) {
         if (err) {
             callback(err);
         } else {
@@ -103,17 +103,17 @@ newFile = function(opts, callback) {
     });
 }
 
-addFile = function(opts, callback) {
+addFile = function (opts, callback) {
     if (typeof opts == "function") {
         callback = opts;
         opts = {};
     }
 
-    newFile(opts, function(err, opts) {
+    newFile(opts, function (err, opts) {
         if (err) {
             callback(err);
         } else {
-            run("git add " + opts.filename, function(err, stdout, stderr) {
+            run("git add " + opts.filename, function (err, stdout, stderr) {
                 if (err || stderr) {
                     callback(err || new Error(stderr));
                 } else {
@@ -124,20 +124,20 @@ addFile = function(opts, callback) {
     });
 }
 
-addFiles = function(number, callback){
+addFiles = function (number, callback) {
     var files = [];
-    
 
-    var runner = function(err, data){
-        if(err){
+
+    var runner = function (err, data) {
+        if (err) {
             callback(err);
         }
-        else{
+        else {
             files.push(data);
-            if(files.length==number){
+            if (files.length == number) {
                 callback(null, files);
             }
-            else{
+            else {
                 addFile(runner);
             }
         }
@@ -146,19 +146,18 @@ addFiles = function(number, callback){
     addFile(runner);
 }
 
-addAndCommitFile = function(opts, callback) {
+addAndCommitFile = function (opts, callback) {
 
     if (typeof opts == "function") {
         callback = opts;
         opts = {};
     }
 
-
-    addFile(opts, function(err, opts) {
+    addFile(opts, function (err, opts) {
         if (err) {
             callback(err);
         } else {
-            run("git commit -m 'adding " + opts.filename + "'", function(err, stdout, stderr) {
+            run("git commit -m 'adding " + opts.filename + "'", function (err, stdout, stderr) {
                 if (err || stderr) {
                     callback(err || new Error(stderr));
                 } else {
@@ -166,6 +165,45 @@ addAndCommitFile = function(opts, callback) {
                 }
 
             });
+        }
+    });
+}
+
+addAndCommitFiles = function (number, callback) {
+
+    if (typeof opts == "function") {
+        callback = opts;
+        opts = {};
+    }
+
+    addFiles(number, function (err, files) {
+        if (err) {
+            callback(err);
+        } else {
+            run("git commit -m 'adding files'", function (err, stdout, stderr) {
+                if (err || stderr) {
+                    callback(err || new Error(stderr));
+                } else {
+                    callback(null, files);
+                }
+
+            });
+        }
+    });
+}
+
+switchBranch = function (opts, callback) {
+
+    if (typeof opts == "function") {
+        callback = opts;
+        opts = {};
+    }
+
+    run(`git checkout -b test`, function (err, stdout, stderr) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, opts);
         }
     });
 }
