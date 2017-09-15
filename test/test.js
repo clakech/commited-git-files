@@ -1,7 +1,8 @@
 require("should");
-var fs = require("fs");
+const fs = require("fs");
+const path = require('path');
 exec = require("child_process").exec;
-test_folder = process.cwd() + "/test/test-dir";
+test_folder = path.join(process.cwd(), "/test/test-dir");
 
 asyncCatch = function (done, test) {
     return function (err, value) {
