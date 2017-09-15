@@ -1,4 +1,4 @@
-# Commited Git Files [![Build Status](https://travis-ci.org/clakech/commited-git-files.svg?branch=master)](https://travis-ci.org/clakech/commited-git-files) [![AppVeyor branch](https://img.shields.io/appveyor/ci/clakech/commited-git-files/master.svg)](https://ci.appveyor.com/project/clakech/commited-git-files) [![npm version](https://badge.fury.io/js/commited-git-files.svg)](https://badge.fury.io/js/commited-git-files)
+# Commited Git Files [![Build Status](https://travis-ci.org/clakech/commited-git-files.svg?branch=master)](https://travis-ci.org/clakech/commited-git-files) [![npm version](https://badge.fury.io/js/commited-git-files.svg)](https://badge.fury.io/js/commited-git-files)
 
 This module returns an array of commited files diff from a source branch and current HEAD and their status acording to git.
 
