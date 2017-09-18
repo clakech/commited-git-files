@@ -1,17 +1,17 @@
-# Commited Git Files [![Build Status](https://travis-ci.org/clakech/commited-git-files.svg?branch=master)](https://travis-ci.org/clakech/commited-git-files) [![npm version](https://badge.fury.io/js/commited-git-files.svg)](https://badge.fury.io/js/commited-git-files)
+# committed Git Files [![Build Status](https://travis-ci.org/clakech/committed-git-files.svg?branch=master)](https://travis-ci.org/clakech/committed-git-files) [![npm version](https://badge.fury.io/js/committed-git-files.svg)](https://badge.fury.io/js/committed-git-files)
 
-This module returns an array of commited files diff from a source branch and current HEAD and their status acording to git.
+This module returns an array of committed files diff from a source branch and current HEAD and their status acording to git.
 
 ## Usage
 
 **Download**
 
-`npm install commited-git-files`
+`npm install committed-git-files`
 
 **In Code**
 
 ```
-var cgf = require("commited-git-files");
+var cgf = require("committed-git-files");
 cgf(function(err, results){
 	//WHAT EVER YOU SO PLEASE
 });
@@ -40,7 +40,7 @@ cgf(function(err, results){
 
 ### cgf(source, filter, callback)
 
-Get a list of commited git files
+Get a list of committed git files
 
 * source: string of git source branch: origin/master
 * filter: string of git status codes. No spaces
@@ -50,7 +50,7 @@ Get a list of commited git files
 
 ### cgf.getSourceId(source, callback)
 
-Get commit id that will be used in the diff to ID which files are commited diff.
+Get commit id that will be used in the diff to ID which files are committed diff.
 
 * source: string of git source branch: origin/master
 * callback
@@ -96,5 +96,5 @@ The current working directory. AKA: where the .git folder you care about is.
 
 ### 0.0.1
 
-* implements mvm (minimum viable module) to diff commited files form a source branch
+* implements mvm (minimum viable module) to diff committed files form a source branch
 * forked from https://github.com/mcwhittemore/staged-git-files

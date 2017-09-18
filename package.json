@@ -1,11 +1,11 @@
 {
-  "name": "commited-git-files",
+  "name": "committed-git-files",
   "version": "0.0.1",
   "devDependencies": {
     "should": "~2.0.1",
     "mocha": "^2.0.1"
   },
-  "description": "get a list of commited git files and their status",
+  "description": "get a list of committed git files and their status",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/clakech/commited-git-files.git"
+    "url": "git://github.com/clakech/committed-git-files.git"
   },
   "keywords": [
     "git",
@@ -24,6 +24,6 @@
   "author": "@cyril_lakech",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/clakech/commited-git-files/issues"
+    "url": "https://github.com/clakech/committed-git-files/issues"
   }
 }

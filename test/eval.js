@@ -55,7 +55,7 @@ describe("As a module", function () {
         });
     });
 
-    describe("used in a directory with commited files", function () {
+    describe("used in a directory with committed files", function () {
 
         beforeEach(function (done) {
             setup(function (err) {
