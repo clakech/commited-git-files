@@ -97,4 +97,4 @@ The current working directory. AKA: where the .git folder you care about is.
 ### 0.0.1
 
 * implements mvm (minimum viable module) to diff committed files form a source branch
-* forked from https://github.com/mcwhittemore/staged-git-files
+* forked from https://github.com/mcwhittemore/staged-git-files ❤️
